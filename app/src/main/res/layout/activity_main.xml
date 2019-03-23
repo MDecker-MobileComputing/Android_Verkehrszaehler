@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/buttonKfzAllein"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/button_kfzNurFahrer"
+        android:onClick="onButtonKfzNurFahrer" />
+
+    <Button
+        android:id="@+id/buttonKfzMitfahrer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_kfzMitMitfahrer"
+        android:onClick="onButtonKfzMitMitfahrer" />
+
+    <Button
+        android:id="@+id/buttonLkw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_lwk"
+        android:onClick="onButtonLKW" />
+
+
+    <Button
+        android:id="@+id/buttonLoeschen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:textColor="#FF0000"
+        android:text="@string/button_loeschen"
+        android:onClick="onButtonLoeschen" />
+
+</LinearLayout>
