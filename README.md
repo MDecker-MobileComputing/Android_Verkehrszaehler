@@ -1,8 +1,8 @@
 # Android-App "Verkehrszähler" (Traffic Counter)
 
 
-Simple Android app for manually counting the traffic on a road. 
-The counted vehicles are stored in a [SQLite Database](https://developer.android.com/training/data-storage/sqlite).
+Simple Android app for manually counting the traffic on a road to demonstrate how to use an
+[SQLite Database](https://developer.android.com/training/data-storage/sqlite).
 
 <br>
 

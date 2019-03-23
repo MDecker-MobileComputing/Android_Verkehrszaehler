@@ -23,7 +23,16 @@ public class MainActivity extends Activity
                           implements DialogInterface.OnClickListener {
 
     /** Tag für das Schreiben von Log-Nachrichten. */
-    public static final String TAG4LOGGING = "Verkehrszaehler";
+    private static final String TAG4LOGGING = "Verkehrszaehler";
+
+    /** Name für Zähler für KFZs ohne Bei- und Mitfahrer. */
+    public static final String ZAEHLERNAME_KFZ_FAHRER_ALLEINE = "KFZ_ALLEINE";
+
+    /** Name für Zähler für KFZs mit mindestens einem Mitfahrer außer dem Fahrer. */
+    public static final String ZAEHLERNAME_KFZ_MIT_MITFAHRER = "KFZ_MITFAHRER";
+
+    /** Name für Zähler für LKWs. */
+    public static final String ZAEHLERNAME_LKW = "LKW";
 
 
     /** Objekt für die Zugriffe auf die Datenbank. */
@@ -51,8 +60,8 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         _datenbankManager = new DatenbankManager(this);
+
     }
 
 
@@ -66,7 +75,9 @@ public class MainActivity extends Activity
      */
     public void onButtonKfzNurFahrer(View view) {
 
-        Log.i(TAG4LOGGING, "Zähler erhöhen: KFZ nur mit Fahrer.");
+        _datenbankManager.inkrementZaehler(ZAEHLERNAME_KFZ_FAHRER_ALLEINE);
+
+        Log.i(TAG4LOGGING, "Zähler erhöht: KFZ nur mit Fahrer.");
     }
 
 
@@ -80,7 +91,9 @@ public class MainActivity extends Activity
      */
     public void onButtonKfzMitMitfahrer(View view) {
 
-        Log.i(TAG4LOGGING, "Zähler erhöhen: KFZ mit Mitfahrer.");
+        _datenbankManager.inkrementZaehler(ZAEHLERNAME_KFZ_MIT_MITFAHRER);
+
+        Log.i(TAG4LOGGING, "Zähler erhöht: KFZ mit Mitfahrer.");
     }
 
 
@@ -94,7 +107,9 @@ public class MainActivity extends Activity
      */
     public void onButtonLKW(View view) {
 
-        Log.i(TAG4LOGGING, "Zähler erhöhen: LKW.");
+        _datenbankManager.inkrementZaehler(ZAEHLERNAME_LKW);
+
+        Log.i(TAG4LOGGING, "Zähler erhöht: LKW.");
     }
 
 
@@ -131,7 +146,31 @@ public class MainActivity extends Activity
     @Override
     public void onClick(DialogInterface dialog, int whichButton) {
 
-        Toast.makeText(MainActivity.this, "Sollte jetzt löschen", Toast.LENGTH_LONG).show();
+        try {
+
+            _datenbankManager.zaehlerZuruecksetzen();
+
+            zeigeToast("Alle Zähler zurückgesetzt.");
+
+        } catch (Exception ex) {
+
+            String fehlernachricht = "Exception beim Löschen der Tabelle: " + ex.getMessage();
+            Log.e(TAG4LOGGING, fehlernachricht, ex);
+            zeigeToast(fehlernachricht);
+        }
+    }
+
+
+    /**
+     * Erzeugt Toast-Objekt zur Anzeige einer Nachricht.
+     *
+     * @param nachricht  Im Toast anzuzeigende Nachricht.
+     */
+    protected void zeigeToast(String nachricht) {
+
+        Toast.makeText(this, nachricht, Toast.LENGTH_LONG).show();
+
+        Log.i(TAG4LOGGING, "Toast-Nachricht ausgeben: " + nachricht);
     }
 
 }
