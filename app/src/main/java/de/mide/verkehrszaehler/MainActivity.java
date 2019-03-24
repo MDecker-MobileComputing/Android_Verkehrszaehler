@@ -78,7 +78,8 @@ public class MainActivity extends Activity
         try {
             neuerZaehlerWert = _datenbankManager.inkrementZaehler( zaehlerName );
 
-            Log.i(TAG4LOGGING, "Zähler " + zaehlerName + " erhöht: KFZ nur mit Fahrer.");
+            Log.i(TAG4LOGGING, "Zähler " + zaehlerName + " erhöht: KFZ nur mit Fahrer, " +
+                               "neuer Wert " + neuerZaehlerWert + ".");
 
         } catch (Exception ex) {
 
@@ -92,7 +93,7 @@ public class MainActivity extends Activity
             neuerZaehlerWert = -1;
         }
 
-        return -1;
+        return neuerZaehlerWert;
     }
 
 
