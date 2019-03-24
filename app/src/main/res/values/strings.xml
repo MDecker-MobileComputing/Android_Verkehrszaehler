@@ -5,7 +5,7 @@
     <!-- String-Ressourcen für die Zähl-Buttons -->
     <string name="button_kfzNurFahrer"    >KFZ nur Fahrer</string>
     <string name="button_kfzMitMitfahrer" >KFZ mit Mitfahrer</string>
-    <string name="button_lwk"             >LKW</string>
+    <string name="button_lkw"             >LKW</string>
 
     <string name="button_loeschen">Zähler löschen</string>
 

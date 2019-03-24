@@ -3,6 +3,7 @@ package de.mide.verkehrszaehler;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.database.SQLException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -40,9 +41,6 @@ public class MainActivity extends Activity
     /** Button zum Erhöhen Zähler "LKW". */
     protected Button _buttonLkw = null;
 
-    /** Button zum Löschen der Zählerstände nach Sicherheitsabfrage. */
-    protected Button _buttonLoeschen = null;
-
 
     /**
      * Lifecyle-Methode; lädt Layout-Datei und füllt Member-Variablen mit Referenzen
@@ -60,6 +58,49 @@ public class MainActivity extends Activity
         _buttonLkw          = findViewById( R.id.buttonLkw          );
 
         _datenbankManager = new DatenbankManager(this);
+
+        initZaehlerstaendeAufButtons();
+    }
+
+
+    /**
+     * Methode um die aktuellen Zählerstände aus der DB auszulesen und auf den
+     * Buttons anzuzeigen.
+     * Diese Methode muss am Ende der Methode {@link MainActivity#onCreate(Bundle)}
+     * aufgerufen werden sowie nach dem Zurücksetzen aller Zähler.
+     */
+    protected void initZaehlerstaendeAufButtons() {
+
+        String buttonText   = "";
+        int    zaehlerStand = -1;
+
+        try {
+
+            zaehlerStand = _datenbankManager.getZaehlerWert(DatenbankManager.ZAEHLERNAME_KFZ_FAHRER_ALLEINE);
+            buttonText   = getString(R.string.button_kfzNurFahrer);
+            buttonText  += " (" + zaehlerStand + ")";
+            _buttonKfzNurFahrer.setText( buttonText );
+
+            zaehlerStand = _datenbankManager.getZaehlerWert(DatenbankManager.ZAEHLERNAME_KFZ_MIT_MITFAHRER);
+            buttonText   = getString(R.string.button_kfzMitMitfahrer);
+            buttonText  += " (" + zaehlerStand + ")";
+            _buttonKfzMitfahrer.setText( buttonText );
+
+            zaehlerStand = _datenbankManager.getZaehlerWert(DatenbankManager.ZAEHLERNAME_LKW);
+            buttonText   = getString(R.string.button_lkw);
+            buttonText  += " (" + zaehlerStand + ")";
+            _buttonLkw.setText( buttonText );
+
+        }
+        catch (SQLException ex) {
+
+            String fehlernachricht =
+                    "Exception bei Anzeige von Zähler-Stand auf Button: " + ex.getMessage();
+
+            Log.e(TAG4LOGGING, fehlernachricht, ex);
+
+            zeigeDialog("Fehler", fehlernachricht);
+        }
     }
 
 
@@ -153,7 +194,7 @@ public class MainActivity extends Activity
 
         int neuerWert = erhoeheZaehler( DatenbankManager.ZAEHLERNAME_LKW );
 
-        neuerButtonText  = getString(R.string.button_lwk);
+        neuerButtonText  = getString(R.string.button_lkw);
         neuerButtonText += " (" + neuerWert + ")";
 
         _buttonLkw.setText( neuerButtonText );
@@ -196,6 +237,8 @@ public class MainActivity extends Activity
         try {
 
             _datenbankManager.alleZaehlerZuruecksetzen();
+
+            initZaehlerstaendeAufButtons();
 
             zeigeToast("Alle Zähler zurückgesetzt.");
 
