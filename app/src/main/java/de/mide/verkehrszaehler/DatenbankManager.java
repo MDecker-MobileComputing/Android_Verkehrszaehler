@@ -12,7 +12,7 @@ import java.util.Date;
 
 
 /**
- * In dieser Klasse kapseln wir alle Datenbank-Zugriffe.
+ * In dieser Klasse sind alle Datenbank-Zugriffe gekapselt.
  * <br><br>
  *
  * Für jede Zähler-Erhöhung wird eine Zeile in die Tabelle geschrieben, die neben
@@ -60,6 +60,7 @@ public class DatenbankManager extends SQLiteOpenHelper {
                 db.compileStatement("INSERT INTO zaehler (name, datumzeit) VALUES ( ?, ? )");
     }
 
+
     /**
      * Abstrakte Methode aus der Oberklasse {@link SQLiteOpenHelper},
      * muss also überschrieben werden, damit diese Klasse nicht selbst
@@ -104,6 +105,7 @@ public class DatenbankManager extends SQLiteOpenHelper {
         // Absichtlich leer gelassen, da wir diese Methode für die
         // erste Version der App nicht überschreiben müssen.
     }
+
 
     /**
      * Methode zum Auslesen aktueller Wert eines bestimmten Zählers.
