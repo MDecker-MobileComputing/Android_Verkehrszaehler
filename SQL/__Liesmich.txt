@@ -1,0 +1,20 @@
+
+Die SQL-Dateien in diesem Verzeichnis können interaktiv mit SQLite3.exe ausgeführt werden.
+
+Start von SQLite3 im interaktiven Modus: sqlite3 test.db
+
+
+Befehle im interaktiven Modus:
+
+* SQL-Datei aus diesem Verzeichnis einlesen und ausführen: .read <dateiname>
+  Beispiel: .read onCreate.sql
+  
+* Anzeige aller Tabellen: .tables
+
+* Beschreibung Tabellen-Schema: .schema <tabellenname>
+  Beispiel: .schema zaehler  
+  
+* Es können auch SQL-Statements im interaktiven Modus eingegeben werden.
+  Beispiel: SELECT * FROM zaehler;
+
+* Beenden: .quit

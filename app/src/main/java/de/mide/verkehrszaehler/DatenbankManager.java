@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.Date;
 
@@ -26,11 +25,26 @@ public class DatenbankManager extends SQLiteOpenHelper {
     /** Tag für das Schreiben von Log-Nachrichten. */
     private static final String TAG4LOGGING = "DBManager";
 
-    /** Prepared Statement um alle Zähler zu löschen. */
-    protected SQLiteStatement _preparedStatementAllesLoeschen = null;
+
+    /** Name für Zähler für KFZs ohne Bei- und Mitfahrer. */
+    public static final String ZAEHLERNAME_KFZ_FAHRER_ALLEINE = "KFZ_ALLEINE";
+
+    /** Name für Zähler für KFZs mit mindestens einem Mitfahrer außer dem Fahrer. */
+    public static final String ZAEHLERNAME_KFZ_MIT_MITFAHRER = "KFZ_MITFAHRER";
+
+    /** Name für Zähler für LKWs. */
+    public static final String ZAEHLERNAME_LKW = "LKW";
+
 
     /** Prepared Statement um einen bestimmten Zähler um "1" zu erhöhen. */
     protected SQLiteStatement _preparedStatementZaehlerErhoehen = null;
+
+
+    /** Prepared Statement um alle Zähler zurückzusetzen. */
+    protected SQLiteStatement _preparedStatementAlleZaehlerZuruecksetzen = null;
+
+    /** Prepared Statement zum Auslesen eines bestimmten Zählers. */
+    protected SQLiteStatement _preparedStatementZaehlerAuslesen = null;
 
 
     /**
@@ -53,11 +67,14 @@ public class DatenbankManager extends SQLiteOpenHelper {
 
         SQLiteDatabase db = getReadableDatabase();
 
-        _preparedStatementAllesLoeschen =
-                db.compileStatement("DELETE FROM zaehler");
-
         _preparedStatementZaehlerErhoehen =
-                db.compileStatement("INSERT INTO zaehler (name, datumzeit) VALUES ( ?, ? )");
+                db.compileStatement("UPDATE zaehler SET anzahl = anzahl + 1 WHERE name = ?");
+
+        _preparedStatementAlleZaehlerZuruecksetzen =
+                db.compileStatement("UPDATE zaehler SET anzahl = 0");
+
+        _preparedStatementZaehlerAuslesen =
+                db.compileStatement("SELECT anzahl FROM zaehler WHERE name = ?");
     }
 
 
@@ -74,15 +91,46 @@ public class DatenbankManager extends SQLiteOpenHelper {
 
         try {
 
+            // Datenbank-Tabelle anlegen
             final String createStatement =
-                    "CREATE TABLE zaehler (      " +
-                    "  name       TEXT NOT NULL, " +
-                    "  datumzeit  LONG NOT NULL  " + // Zeitstempel als Anzahl Sekunden seit 1.1.1970
+                    "CREATE TABLE zaehler (        " +
+                    "  name   TEXT    PRIMARY KEY, " +
+                    "  anzahl INTEGER DEFAULT 0    " +
                     ")";
 
             db.execSQL( createStatement );
 
-            Log.i(TAG4LOGGING, "Datenbank-Tabelle wurde angelegt.");
+            Log.i(TAG4LOGGING, "Datenbanktabelle wurde angelegt.");
+
+
+            //  Zähler in Tabelle einfügen
+            long idNeueZeile = 0;
+
+            SQLiteStatement prepStmtInsertZaehler =
+                    db.compileStatement("INSERT INTO zaehler (name, anzahl) VALUES ( ?, 0 )");
+
+            prepStmtInsertZaehler.bindString(1, ZAEHLERNAME_KFZ_FAHRER_ALLEINE);
+            idNeueZeile = prepStmtInsertZaehler.executeInsert();
+            if (idNeueZeile == -1) {
+                throw new SQLException("Konnte Zähler " + ZAEHLERNAME_KFZ_FAHRER_ALLEINE +
+                                       " nicht anlegen");
+            }
+
+            prepStmtInsertZaehler.bindString(1, ZAEHLERNAME_KFZ_MIT_MITFAHRER);
+            idNeueZeile = prepStmtInsertZaehler.executeInsert();
+            if (idNeueZeile == -1) {
+                throw new SQLException("Konnte Zähler " + ZAEHLERNAME_KFZ_MIT_MITFAHRER +
+                                       " nicht anlegen");
+            }
+
+            prepStmtInsertZaehler.bindString(1, ZAEHLERNAME_LKW);
+            idNeueZeile = prepStmtInsertZaehler.executeInsert();
+            if (idNeueZeile == -1) {
+                throw new SQLException("Konnte Zähler " + ZAEHLERNAME_LKW +
+                                       " nicht anlegen");
+            }
+
+            Log.i(TAG4LOGGING, "Zähler wurden angelegt.");
 
         } catch (SQLException ex) {
 
@@ -99,6 +147,11 @@ public class DatenbankManager extends SQLiteOpenHelper {
      * App auf eine neue Version aktualisiert werden muss.
      *
      * @param db  Referenz auf Datenbank-Objekt
+     *
+     * @param oldVersion  Alte Version Datenbank-Schema die DB für diese App-Installation derzeit
+     *                    hat.
+     *
+     * @param newVersion  Neue Version Datenbank-Schema die hergestellt werden soll.
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -113,35 +166,46 @@ public class DatenbankManager extends SQLiteOpenHelper {
      * @param zaehlerName  Names des auszulesenden Zählers.
      *
      * @return  Aktueller Wert des Zählers; hat Wert 0 wenn Zähler nicht gefunden.
+     *
+     * @throws SQLException  Datenbank-Fehler.
      */
-    public int getZaehlerWert(String zaehlerName) {
+    public int getZaehlerWert(String zaehlerName) throws SQLException {
 
-        return 0;
+        _preparedStatementZaehlerAuslesen.clearBindings();
+
+        // Prepared Statement: SELECT anzahl FROM zaehler WHERE name = ?
+        _preparedStatementZaehlerAuslesen.bindString(1, zaehlerName);
+
+        long ergebnis = _preparedStatementZaehlerAuslesen.simpleQueryForLong();
+        // Diese Methode gibt es nur für Long und nicht für Int.
+
+        return (int) ergebnis;
     }
 
 
     /**
-     * Erhöht einen Zähler um "+1".
+     * Erhöht den Zähler mit Name {@code zaehlerName} um eins.
      *
-     * @param zaehlerName  Name des Zählers, der zu erhöhen ist.
+     * @param zaehlerName  Name des Zählers, der zu erhöhen ist; der Zähler muss schon vorhanden
+     *                     sein.
      *
      * @return  Neuer Wert des Zählers.
+     *
+     * @throws SQLException  Datenbank-Fehler.
      */
-    public int inkrementZaehler(String zaehlerName) {
+    public int inkrementZaehler(String zaehlerName) throws SQLException {
 
+        // "UPDATE zaehler SET anzahl = anzahl + 1 WHERE name = ?"
         _preparedStatementZaehlerErhoehen.clearBindings();
 
-        Date jetztDate = new Date();
-        long sekundenSeit1970 = jetztDate .getTime() / 1000;
+        _preparedStatementZaehlerErhoehen.bindString(1, zaehlerName);
 
-
-        // INSERT INTO zaehler (name, datumzeit) VALUES ( ?, ? )
-        _preparedStatementZaehlerErhoehen.bindString( 1, zaehlerName      );
-        _preparedStatementZaehlerErhoehen.bindLong  ( 2, sekundenSeit1970 );
-
-        long idVonNeuerZeile = _preparedStatementZaehlerErhoehen.executeInsert();
-
-        Log.i(TAG4LOGGING, "Neue Zeile mit ID=" + idVonNeuerZeile + " eingefügt.");
+        int anzZeilenGeaendert = _preparedStatementZaehlerErhoehen.executeUpdateDelete();
+        if (anzZeilenGeaendert != 1) {
+            throw new SQLException(
+                    "Nicht genau eine Tabellen-Zeile für Erhöhung von Zähler " + zaehlerName +
+                    " geändert.");
+        }
 
         return getZaehlerWert(zaehlerName);
     }
@@ -152,9 +216,10 @@ public class DatenbankManager extends SQLiteOpenHelper {
      *
      * @throws SQLException  Datenbankfehler beim Löschen aufgetreten.
      */
-    public void zaehlerZuruecksetzen() throws SQLException {
+    public void alleZaehlerZuruecksetzen() throws SQLException {
 
-        int anzZeilen = _preparedStatementAllesLoeschen.executeUpdateDelete();
+        // SQL-Statement: UPDATE zaehler SET anzahl = 0
+        int anzZeilen = _preparedStatementAlleZaehlerZuruecksetzen.executeUpdateDelete();
 
         Log.i(TAG4LOGGING, "Ganze Tabelle mit " + anzZeilen + " Zeilen gelöscht.");
     }

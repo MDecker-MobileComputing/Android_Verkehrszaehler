@@ -3,7 +3,6 @@ package de.mide.verkehrszaehler;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -25,17 +24,11 @@ public class MainActivity extends Activity
     /** Tag für das Schreiben von Log-Nachrichten. */
     private static final String TAG4LOGGING = "Verkehrszaehler";
 
-    /** Name für Zähler für KFZs ohne Bei- und Mitfahrer. */
-    public static final String ZAEHLERNAME_KFZ_FAHRER_ALLEINE = "KFZ_ALLEINE";
 
-    /** Name für Zähler für KFZs mit mindestens einem Mitfahrer außer dem Fahrer. */
-    public static final String ZAEHLERNAME_KFZ_MIT_MITFAHRER = "KFZ_MITFAHRER";
-
-    /** Name für Zähler für LKWs. */
-    public static final String ZAEHLERNAME_LKW = "LKW";
-
-
-    /** Objekt für die Zugriffe auf die Datenbank. */
+    /**
+     * Objekt für die Zugriffe auf die Datenbank; wird in Methode {@linke MainActivity#onCreate(Bundle)}
+     * befüllt.
+     */
     protected DatenbankManager _datenbankManager = null;
 
     /** Button zum Erhöhen Zähler "KFZs nur mit Fahrer". */
@@ -52,7 +45,9 @@ public class MainActivity extends Activity
 
 
     /**
-     * Lifecyle-Methode; lädt Layout-Datei und erzeugt Instanz der Klasse {@link DatenbankManager}.
+     * Lifecyle-Methode; lädt Layout-Datei und füllt Member-Variablen mit Referenzen
+     * auf Button-Objekte.
+     * Es wird außerdem eine Instanz der Klasse {@link DatenbankManager} erzeugt.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +55,44 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        _datenbankManager = new DatenbankManager(this);
+        _buttonKfzNurFahrer = findViewById( R.id.buttonKfzAllein    );
+        _buttonKfzMitfahrer = findViewById( R.id.buttonKfzMitfahrer );
+        _buttonLkw          = findViewById( R.id.buttonLkw          );
 
+        _datenbankManager = new DatenbankManager(this);
+    }
+
+
+    /**
+     * Methode um einen bestimmten Zähler um "+1" zu erhöhen.
+     *
+     * @param zaehlerName  Name des Zählers, der um 1 erhöht werden soll.
+     *
+     * @return  Neuer Wert des Zählers (nach Erhöhung); liefert -1 zurück wenn
+     *          ein Fehler aufgetreten ist.
+     */
+    protected int erhoeheZaehler(String zaehlerName) {
+
+        int neuerZaehlerWert = -1;
+
+        try {
+            neuerZaehlerWert = _datenbankManager.inkrementZaehler( zaehlerName );
+
+            Log.i(TAG4LOGGING, "Zähler " + zaehlerName + " erhöht: KFZ nur mit Fahrer.");
+
+        } catch (Exception ex) {
+
+            String fehlernachricht =
+                    "Exception bei Erhöhen von Zähler " + zaehlerName + ": " + ex.getMessage();
+
+            Log.e(TAG4LOGGING, fehlernachricht, ex);
+
+            zeigeDialog("Fehler", fehlernachricht);
+
+            neuerZaehlerWert = -1;
+        }
+
+        return -1;
     }
 
 
@@ -75,9 +106,14 @@ public class MainActivity extends Activity
      */
     public void onButtonKfzNurFahrer(View view) {
 
-        _datenbankManager.inkrementZaehler(ZAEHLERNAME_KFZ_FAHRER_ALLEINE);
+        String neuerButtonText = "";
 
-        Log.i(TAG4LOGGING, "Zähler erhöht: KFZ nur mit Fahrer.");
+        int neuerWert = erhoeheZaehler( DatenbankManager.ZAEHLERNAME_KFZ_FAHRER_ALLEINE );
+
+        neuerButtonText  = getString(R.string.button_kfzNurFahrer);
+        neuerButtonText += " (" + neuerWert + ")";
+
+        _buttonKfzNurFahrer.setText( neuerButtonText );
     }
 
 
@@ -91,9 +127,14 @@ public class MainActivity extends Activity
      */
     public void onButtonKfzMitMitfahrer(View view) {
 
-        _datenbankManager.inkrementZaehler(ZAEHLERNAME_KFZ_MIT_MITFAHRER);
+        String neuerButtonText = "";
 
-        Log.i(TAG4LOGGING, "Zähler erhöht: KFZ mit Mitfahrer.");
+        int neuerWert = erhoeheZaehler( DatenbankManager.ZAEHLERNAME_KFZ_MIT_MITFAHRER );
+
+        neuerButtonText  = getString(R.string.button_kfzMitMitfahrer);
+        neuerButtonText += " (" + neuerWert + ")";
+
+        _buttonKfzMitfahrer.setText( neuerButtonText );
     }
 
 
@@ -107,9 +148,14 @@ public class MainActivity extends Activity
      */
     public void onButtonLKW(View view) {
 
-        _datenbankManager.inkrementZaehler(ZAEHLERNAME_LKW);
+        String neuerButtonText = "";
 
-        Log.i(TAG4LOGGING, "Zähler erhöht: LKW.");
+        int neuerWert = erhoeheZaehler( DatenbankManager.ZAEHLERNAME_LKW );
+
+        neuerButtonText  = getString(R.string.button_lwk);
+        neuerButtonText += " (" + neuerWert + ")";
+
+        _buttonLkw.setText( neuerButtonText );
     }
 
 
@@ -148,7 +194,7 @@ public class MainActivity extends Activity
 
         try {
 
-            _datenbankManager.zaehlerZuruecksetzen();
+            _datenbankManager.alleZaehlerZuruecksetzen();
 
             zeigeToast("Alle Zähler zurückgesetzt.");
 
@@ -156,7 +202,7 @@ public class MainActivity extends Activity
 
             String fehlernachricht = "Exception beim Löschen der Tabelle: " + ex.getMessage();
             Log.e(TAG4LOGGING, fehlernachricht, ex);
-            zeigeToast(fehlernachricht);
+            zeigeDialog("Fehler", fehlernachricht);
         }
     }
 
@@ -171,6 +217,26 @@ public class MainActivity extends Activity
         Toast.makeText(this, nachricht, Toast.LENGTH_LONG).show();
 
         Log.i(TAG4LOGGING, "Toast-Nachricht ausgeben: " + nachricht);
+    }
+
+
+    /**
+     * Hilfsmethods zum Anzeigen einer Nachricht in einem Dialog.
+     *
+     * @param titel  Titel des Dialogs.
+     *
+     * @param nachricht  Text der im Dialog angezeigt werden soll.
+     */
+    protected void zeigeDialog(String titel, String nachricht) {
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+
+        dialogBuilder.setTitle(titel);
+        dialogBuilder.setMessage(nachricht);
+        dialogBuilder.setPositiveButton("Weiter", null);
+
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
     }
 
 }
