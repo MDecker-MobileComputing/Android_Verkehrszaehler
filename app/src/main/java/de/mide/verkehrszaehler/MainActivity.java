@@ -45,7 +45,8 @@ public class MainActivity extends Activity
     /**
      * Lifecyle-Methode; lädt Layout-Datei und füllt Member-Variablen mit Referenzen
      * auf Button-Objekte.
-     * Es wird außerdem eine Instanz der Klasse {@link DatenbankManager} erzeugt.
+     * Es wird außerdem eine Instanz der Klasse {@link DatenbankManager} erzeugt
+     * (mit Fehlerbehandlung).
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +58,23 @@ public class MainActivity extends Activity
         _buttonKfzMitfahrer = findViewById( R.id.buttonKfzMitfahrer );
         _buttonLkw          = findViewById( R.id.buttonLkw          );
 
-        _datenbankManager = new DatenbankManager(this);
+        try {
 
-        initZaehlerstaendeAufButtons();
+          _datenbankManager = new DatenbankManager(this);
+          initZaehlerstaendeAufButtons();
+
+        } catch (SQLException ex) {
+
+            String fehlernachricht = "Exception bei Vorbereitung Datenbank-Manager: " + ex.getMessage();                    
+
+            Log.e(TAG4LOGGING, fehlernachricht, ex);
+
+            _buttonKfzNurFahrer.setEnabled(false); 
+            _buttonKfzMitfahrer.setEnabled(false); 
+            _buttonLkw.setEnabled(false); 
+
+            zeigeDialog("Fehler", fehlernachricht);
+        }
     }
 
 
