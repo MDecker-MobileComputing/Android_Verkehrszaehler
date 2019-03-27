@@ -52,9 +52,11 @@ public class DatenbankManager extends SQLiteOpenHelper {
      * Versions-Nummer festzulegen. Danach werden die <i>Prepared Statements</i>
      * erzeugt.
      *
-     * @param context  Selbstreferenz auf Activity, die dieses Objekt erzeugt hat
+     * @param context  Selbstreferenz auf Activity, die dieses Objekt erzeugt hat.
+     *
+     * @throws SQLException  Datenbank-Fehler (z.B. Syntax-Fehler in SQL-Statement).
      */
-    public DatenbankManager(Context context) {
+    public DatenbankManager(Context context) throws SQLException {
 
         super(context,
                 "Verkehszaehlung.db",  // Name der DB
@@ -75,6 +77,7 @@ public class DatenbankManager extends SQLiteOpenHelper {
 
         _preparedStatementZaehlerAuslesen =
                 db.compileStatement("SELECT anzahl FROM zaehler WHERE name = ?");
+        
     }
 
 
