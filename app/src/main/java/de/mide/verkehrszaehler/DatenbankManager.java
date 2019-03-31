@@ -187,8 +187,7 @@ public class DatenbankManager extends SQLiteOpenHelper {
             Log.w(TAG4LOGGING, "Keinen einzigen Zähler gefunden.");
             return ergebnisHashMap;
         }
-
-        int zaehler = 0;
+        
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 
             String zaehlerName = cursor.getString(0);
