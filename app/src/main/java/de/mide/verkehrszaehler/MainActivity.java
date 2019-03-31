@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.HashMap;
+
 
 /**
  * Main-Activity für eine Android-App, die eine einfache Verkehrszähler-App
@@ -91,19 +93,41 @@ public class MainActivity extends Activity
 
         try {
 
-            zaehlerStand = _datenbankManager.getZaehlerWert(DatenbankManager.ZAEHLERNAME_KFZ_FAHRER_ALLEINE);
+            HashMap<String,Integer> zaehlerHashMap = _datenbankManager.getAlleZaehlerWerte();
+
+            Integer zaehler1 = zaehlerHashMap.get(DatenbankManager.ZAEHLERNAME_KFZ_FAHRER_ALLEINE );
             buttonText   = getString(R.string.button_kfzNurFahrer);
-            buttonText  += " (" + zaehlerStand + ")";
+            if (zaehler1 != null) {
+                buttonText += " (" + zaehler1 + ")";
+            } else {
+                buttonText += " (???)";
+                Log.e(TAG4LOGGING,
+                      "Kein Zähler-Wert gefunden für " + DatenbankManager.ZAEHLERNAME_KFZ_FAHRER_ALLEINE + ".");
+            }
             _buttonKfzNurFahrer.setText( buttonText );
 
-            zaehlerStand = _datenbankManager.getZaehlerWert(DatenbankManager.ZAEHLERNAME_KFZ_MIT_MITFAHRER);
+
+            Integer zaehler2 = zaehlerHashMap.get(DatenbankManager.ZAEHLERNAME_KFZ_MIT_MITFAHRER);
             buttonText   = getString(R.string.button_kfzMitMitfahrer);
-            buttonText  += " (" + zaehlerStand + ")";
+            if (zaehler2 != null) {
+                buttonText += " (" + zaehler2 + ")";
+            } else {
+                buttonText += " (???)";
+                Log.e(TAG4LOGGING,
+                      "Kein Zähler-Wert gefunden für " + DatenbankManager.ZAEHLERNAME_KFZ_MIT_MITFAHRER  + ".");
+            }
             _buttonKfzMitfahrer.setText( buttonText );
 
-            zaehlerStand = _datenbankManager.getZaehlerWert(DatenbankManager.ZAEHLERNAME_LKW);
+
+            Integer zaehler3 = zaehlerHashMap.get(DatenbankManager.ZAEHLERNAME_LKW);
             buttonText   = getString(R.string.button_lkw);
-            buttonText  += " (" + zaehlerStand + ")";
+            if (zaehler3 != null) {
+                buttonText  += " (" + zaehler3 + ")";
+            } else {
+                buttonText += " (???)";
+                Log.e(TAG4LOGGING,
+                      "Kein Zähler-Wert gefunden für " + DatenbankManager.ZAEHLERNAME_LKW + ".");
+            }
             _buttonLkw.setText( buttonText );
 
         }

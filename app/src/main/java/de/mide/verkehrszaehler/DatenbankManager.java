@@ -1,13 +1,14 @@
 package de.mide.verkehrszaehler;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
-import java.util.Date;
+import java.util.HashMap;
 
 
 /**
@@ -44,7 +45,7 @@ public class DatenbankManager extends SQLiteOpenHelper {
     protected SQLiteStatement _preparedStatementAlleZaehlerZuruecksetzen = null;
 
     /** Prepared Statement zum Auslesen eines bestimmten Zählers. */
-    protected SQLiteStatement _preparedStatementZaehlerAuslesen = null;
+    protected SQLiteStatement _preparedStatementEinenZaehlerAuslesen = null;
 
 
     /**
@@ -75,9 +76,8 @@ public class DatenbankManager extends SQLiteOpenHelper {
         _preparedStatementAlleZaehlerZuruecksetzen =
                 db.compileStatement("UPDATE zaehler SET anzahl = 0");
 
-        _preparedStatementZaehlerAuslesen =
+        _preparedStatementEinenZaehlerAuslesen =
                 db.compileStatement("SELECT anzahl FROM zaehler WHERE name = ?");
-        
     }
 
 
@@ -164,6 +164,46 @@ public class DatenbankManager extends SQLiteOpenHelper {
 
 
     /**
+     * Methode um alle Zähler-Werte auszulesen.
+     *
+     * @return  HashMap, bei der jeder Zähler-Name (String) auf die entsprechende Anzahl
+     *          abgebildet wird; kann leer sein, ist aber nicht {@code null}.
+     *
+     * @throws SQLException  Datenbankfehler aufgetreten
+     */
+    public HashMap<String,Integer> getAlleZaehlerWerte() throws SQLException {
+
+        HashMap<String,Integer> ergebnisHashMap = new HashMap<String,Integer>();
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        Cursor cursor =
+                db.rawQuery(
+                        "SELECT name, anzahl FROM zaehler ORDER BY NAME ASC",
+                        null); // die "selectionArgs" brauchen wir hier nicht
+
+        int anzahlErgebnisZeilen = cursor.getCount();
+        if (anzahlErgebnisZeilen == 0) {
+            Log.w(TAG4LOGGING, "Keinen einzigen Zähler gefunden.");
+            return ergebnisHashMap;
+        }
+
+        int zaehler = 0;
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+
+            String zaehlerName = cursor.getString(0);
+            int    zaehlerWert = cursor.getInt(1);
+
+            ergebnisHashMap.put(zaehlerName, zaehlerWert);
+        }
+
+        cursor.close();
+
+        return ergebnisHashMap;
+    }
+
+
+    /**
      * Methode zum Auslesen aktueller Wert eines bestimmten Zählers.
      *
      * @param zaehlerName  Names des auszulesenden Zählers.
@@ -174,12 +214,12 @@ public class DatenbankManager extends SQLiteOpenHelper {
      */
     public int getZaehlerWert(String zaehlerName) throws SQLException {
 
-        _preparedStatementZaehlerAuslesen.clearBindings();
+        _preparedStatementEinenZaehlerAuslesen.clearBindings();
 
         // Prepared Statement: SELECT anzahl FROM zaehler WHERE name = ?
-        _preparedStatementZaehlerAuslesen.bindString(1, zaehlerName);
+        _preparedStatementEinenZaehlerAuslesen.bindString(1, zaehlerName);
 
-        long ergebnis = _preparedStatementZaehlerAuslesen.simpleQueryForLong();
+        long ergebnis = _preparedStatementEinenZaehlerAuslesen.simpleQueryForLong();
         // Diese Methode gibt es nur für Long und nicht für Int.
 
         return (int) ergebnis;
