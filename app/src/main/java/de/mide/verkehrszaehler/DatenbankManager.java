@@ -115,6 +115,7 @@ public class DatenbankManager extends SQLiteOpenHelper {
             prepStmtInsertZaehler.bindString(1, ZAEHLERNAME_KFZ_FAHRER_ALLEINE);
             idNeueZeile = prepStmtInsertZaehler.executeInsert();
             if (idNeueZeile == -1) {
+
                 throw new SQLException("Konnte Zähler " + ZAEHLERNAME_KFZ_FAHRER_ALLEINE +
                                        " nicht anlegen");
             }
@@ -122,6 +123,7 @@ public class DatenbankManager extends SQLiteOpenHelper {
             prepStmtInsertZaehler.bindString(1, ZAEHLERNAME_KFZ_MIT_MITFAHRER);
             idNeueZeile = prepStmtInsertZaehler.executeInsert();
             if (idNeueZeile == -1) {
+
                 throw new SQLException("Konnte Zähler " + ZAEHLERNAME_KFZ_MIT_MITFAHRER +
                                        " nicht anlegen");
             }

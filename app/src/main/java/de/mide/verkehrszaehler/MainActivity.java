@@ -98,8 +98,11 @@ public class MainActivity extends Activity
             Integer zaehler1 = zaehlerHashMap.get(DatenbankManager.ZAEHLERNAME_KFZ_FAHRER_ALLEINE );
             buttonText   = getString(R.string.button_kfzNurFahrer);
             if (zaehler1 != null) {
+
                 buttonText += " (" + zaehler1 + ")";
+
             } else {
+
                 buttonText += " (???)";
                 Log.e(TAG4LOGGING,
                       "Kein Zähler-Wert gefunden für " + DatenbankManager.ZAEHLERNAME_KFZ_FAHRER_ALLEINE + ".");
@@ -110,8 +113,11 @@ public class MainActivity extends Activity
             Integer zaehler2 = zaehlerHashMap.get(DatenbankManager.ZAEHLERNAME_KFZ_MIT_MITFAHRER);
             buttonText   = getString(R.string.button_kfzMitMitfahrer);
             if (zaehler2 != null) {
+
                 buttonText += " (" + zaehler2 + ")";
+
             } else {
+
                 buttonText += " (???)";
                 Log.e(TAG4LOGGING,
                       "Kein Zähler-Wert gefunden für " + DatenbankManager.ZAEHLERNAME_KFZ_MIT_MITFAHRER  + ".");
@@ -122,8 +128,11 @@ public class MainActivity extends Activity
             Integer zaehler3 = zaehlerHashMap.get(DatenbankManager.ZAEHLERNAME_LKW);
             buttonText   = getString(R.string.button_lkw);
             if (zaehler3 != null) {
+
                 buttonText  += " (" + zaehler3 + ")";
+
             } else {
+
                 buttonText += " (???)";
                 Log.e(TAG4LOGGING,
                       "Kein Zähler-Wert gefunden für " + DatenbankManager.ZAEHLERNAME_LKW + ".");
@@ -156,6 +165,7 @@ public class MainActivity extends Activity
         int neuerZaehlerWert = -1;
 
         try {
+
             neuerZaehlerWert = _datenbankManager.inkrementZaehler( zaehlerName );
 
             Log.i(TAG4LOGGING, "Zähler " + zaehlerName + " erhöht: KFZ nur mit Fahrer, " +
