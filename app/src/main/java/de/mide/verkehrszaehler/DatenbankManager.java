@@ -63,7 +63,7 @@ public class DatenbankManager extends SQLiteOpenHelper {
                 "Verkehszaehlung.db",  // Name der DB
                 null,                  // Default-CursorFactory verwenden
                 1                      // Versions-Nummer der Datenbank
-              );
+             );
 
 
         // Prepared Statements erzeugen
@@ -131,6 +131,7 @@ public class DatenbankManager extends SQLiteOpenHelper {
             prepStmtInsertZaehler.bindString(1, ZAEHLERNAME_LKW);
             idNeueZeile = prepStmtInsertZaehler.executeInsert();
             if (idNeueZeile == -1) {
+
                 throw new SQLException("Konnte Zähler " + ZAEHLERNAME_LKW +
                                        " nicht anlegen");
             }
@@ -160,6 +161,7 @@ public class DatenbankManager extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
         // Absichtlich leer gelassen, da wir diese Methode für die
         // erste Version der App nicht überschreiben müssen.
     }
@@ -186,10 +188,12 @@ public class DatenbankManager extends SQLiteOpenHelper {
 
         int anzahlErgebnisZeilen = cursor.getCount();
         if (anzahlErgebnisZeilen == 0) {
+
             Log.w(TAG4LOGGING, "Keinen einzigen Zähler gefunden.");
             return ergebnisHashMap;
         }
-        
+
+
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
 
             String zaehlerName = cursor.getString(0);
@@ -246,6 +250,7 @@ public class DatenbankManager extends SQLiteOpenHelper {
 
         int anzZeilenGeaendert = _preparedStatementZaehlerErhoehen.executeUpdateDelete();
         if (anzZeilenGeaendert != 1) {
+
             throw new SQLException(
                     "Nicht genau eine Tabellen-Zeile für Erhöhung von Zähler " + zaehlerName +
                     " geändert.");
