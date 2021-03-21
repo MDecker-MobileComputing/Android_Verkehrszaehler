@@ -1,4 +1,4 @@
-# Android-App "Verkehrszähler" (Traffic Counter)
+# Android-App "Verkehrszähler" (Traffic Counter) #
 
 
 Simple Android app for manually counting the traffic on a road to demonstrate how to use an
@@ -15,8 +15,13 @@ Identifiers (names for classes, variables and methods), UI text and (JavaDoc) co
 
 <br>
 
+There is also a variant of this app which uses Android's ORM "Room", see 
+[this repository](https://github.com/MDecker-MobileComputing/Android_Verkehrszaehler_mitRoom).
+
+<br>
+
 ----
-## Screenshots
+## Screenshots ##
 
 ![Screenshot 1](screenshot_1.png)  ![Screenshot 2](screenshot_2.png)
 
@@ -25,6 +30,6 @@ Screenshots were taken from emulator.
 <br>
 
 ----
-# License
+## License ##
 
 See the [LICENSE file](LICENSE.md) for license rights and limitations (BSD 3-Clause License).
