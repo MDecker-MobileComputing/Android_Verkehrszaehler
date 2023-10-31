@@ -1,5 +1,6 @@
 # Android-App "Verkehrszähler" (Traffic Counter) #
 
+<br>
 
 Simple Android app for manually counting the traffic on a road to demonstrate how to use an
 [SQLite Database](https://developer.android.com/training/data-storage/sqlite).
@@ -21,7 +22,10 @@ There is also a variant of this app which uses Android's ORM "Room", see
 <br>
 
 ----
+
 ## Screenshots ##
+
+<br>
 
 ![Screenshot 1](screenshot_1.png)  ![Screenshot 2](screenshot_2.png)
 
@@ -30,6 +34,12 @@ Screenshots were taken from emulator.
 <br>
 
 ----
+
 ## License ##
 
+<br>
+
 See the [LICENSE file](LICENSE.md) for license rights and limitations (BSD 3-Clause License).
+
+<br>
+<
