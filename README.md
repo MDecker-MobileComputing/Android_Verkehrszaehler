@@ -29,8 +29,6 @@ There is also a variant of this app which uses Android's ORM "Room", see
 
 ![Screenshot 1](screenshot_1.png)  ![Screenshot 2](screenshot_2.png)
 
-Screenshots were taken from emulator.
-
 <br>
 
 ----
