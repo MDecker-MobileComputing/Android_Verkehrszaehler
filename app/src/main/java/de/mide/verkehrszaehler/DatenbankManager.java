@@ -63,7 +63,7 @@ public class DatenbankManager extends SQLiteOpenHelper {
                 "Verkehszaehlung.db",  // Name der DB
                 null,                  // Default-CursorFactory verwenden
                 1                      // Versions-Nummer der Datenbank
-             );
+        );
 
 
         // Prepared Statements erzeugen
@@ -97,9 +97,9 @@ public class DatenbankManager extends SQLiteOpenHelper {
             // Datenbank-Tabelle anlegen
             final String createStatement =
                     "CREATE TABLE zaehler (        " +
-                    "  name   TEXT    PRIMARY KEY, " +
-                    "  anzahl INTEGER DEFAULT 0    " +
-                    ")";
+                            "  name   TEXT    PRIMARY KEY, " +
+                            "  anzahl INTEGER DEFAULT 0    " +
+                            ")";
 
             db.execSQL( createStatement );
 
@@ -117,7 +117,7 @@ public class DatenbankManager extends SQLiteOpenHelper {
             if (idNeueZeile == -1) {
 
                 throw new SQLException("Konnte Zähler " + ZAEHLERNAME_KFZ_FAHRER_ALLEINE +
-                                       " nicht anlegen");
+                        " nicht anlegen");
             }
 
             prepStmtInsertZaehler.bindString(1, ZAEHLERNAME_KFZ_MIT_MITFAHRER);
@@ -125,7 +125,7 @@ public class DatenbankManager extends SQLiteOpenHelper {
             if (idNeueZeile == -1) {
 
                 throw new SQLException("Konnte Zähler " + ZAEHLERNAME_KFZ_MIT_MITFAHRER +
-                                       " nicht anlegen");
+                        " nicht anlegen");
             }
 
             prepStmtInsertZaehler.bindString(1, ZAEHLERNAME_LKW);
@@ -133,7 +133,7 @@ public class DatenbankManager extends SQLiteOpenHelper {
             if (idNeueZeile == -1) {
 
                 throw new SQLException("Konnte Zähler " + ZAEHLERNAME_LKW +
-                                       " nicht anlegen");
+                        " nicht anlegen");
             }
 
             Log.i(TAG4LOGGING, "Zähler wurden angelegt.");
@@ -253,7 +253,7 @@ public class DatenbankManager extends SQLiteOpenHelper {
 
             throw new SQLException(
                     "Nicht genau eine Tabellen-Zeile für Erhöhung von Zähler " + zaehlerName +
-                    " geändert.");
+                            " geändert.");
         }
 
         return getZaehlerWert(zaehlerName);

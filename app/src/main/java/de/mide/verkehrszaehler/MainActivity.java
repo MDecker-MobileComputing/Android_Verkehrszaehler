@@ -22,7 +22,7 @@ import java.util.HashMap;
  * This project is licensed under the terms of the BSD 3-Clause License.
  */
 public class MainActivity extends Activity
-                          implements DialogInterface.OnClickListener {
+        implements DialogInterface.OnClickListener {
 
     /** Tag für das Schreiben von Log-Nachrichten. */
     private static final String TAG4LOGGING = "Verkehrszaehler";
@@ -62,18 +62,18 @@ public class MainActivity extends Activity
 
         try {
 
-          _datenbankManager = new DatenbankManager(this);
-          initZaehlerstaendeAufButtons();
+            _datenbankManager = new DatenbankManager(this);
+            initZaehlerstaendeAufButtons();
 
         } catch (SQLException ex) {
 
-            String fehlernachricht = "Exception bei Vorbereitung Datenbank-Manager: " + ex.getMessage();                    
+            String fehlernachricht = "Exception bei Vorbereitung Datenbank-Manager: " + ex.getMessage();
 
             Log.e(TAG4LOGGING, fehlernachricht, ex);
 
-            _buttonKfzNurFahrer.setEnabled(false); 
-            _buttonKfzMitfahrer.setEnabled(false); 
-            _buttonLkw.setEnabled(false); 
+            _buttonKfzNurFahrer.setEnabled(false);
+            _buttonKfzMitfahrer.setEnabled(false);
+            _buttonLkw.setEnabled(false);
 
             zeigeDialog("Fehler", fehlernachricht);
         }
@@ -89,7 +89,6 @@ public class MainActivity extends Activity
     protected void initZaehlerstaendeAufButtons() {
 
         String buttonText   = "";
-        int    zaehlerStand = -1;
 
         try {
 
@@ -105,7 +104,7 @@ public class MainActivity extends Activity
 
                 buttonText += " (???)";
                 Log.e(TAG4LOGGING,
-                      "Kein Zähler-Wert gefunden für " + DatenbankManager.ZAEHLERNAME_KFZ_FAHRER_ALLEINE + ".");
+                        "Kein Zähler-Wert gefunden für " + DatenbankManager.ZAEHLERNAME_KFZ_FAHRER_ALLEINE + ".");
             }
             _buttonKfzNurFahrer.setText( buttonText );
 
@@ -120,7 +119,7 @@ public class MainActivity extends Activity
 
                 buttonText += " (???)";
                 Log.e(TAG4LOGGING,
-                      "Kein Zähler-Wert gefunden für " + DatenbankManager.ZAEHLERNAME_KFZ_MIT_MITFAHRER  + ".");
+                        "Kein Zähler-Wert gefunden für " + DatenbankManager.ZAEHLERNAME_KFZ_MIT_MITFAHRER  + ".");
             }
             _buttonKfzMitfahrer.setText( buttonText );
 
@@ -135,7 +134,7 @@ public class MainActivity extends Activity
 
                 buttonText += " (???)";
                 Log.e(TAG4LOGGING,
-                      "Kein Zähler-Wert gefunden für " + DatenbankManager.ZAEHLERNAME_LKW + ".");
+                        "Kein Zähler-Wert gefunden für " + DatenbankManager.ZAEHLERNAME_LKW + ".");
             }
             _buttonLkw.setText( buttonText );
 
@@ -169,7 +168,7 @@ public class MainActivity extends Activity
             neuerZaehlerWert = _datenbankManager.inkrementZaehler( zaehlerName );
 
             Log.i(TAG4LOGGING, "Zähler " + zaehlerName + " erhöht: KFZ nur mit Fahrer, " +
-                               "neuer Wert " + neuerZaehlerWert + ".");
+                    "neuer Wert " + neuerZaehlerWert + ".");
 
         } catch (Exception ex) {
 
