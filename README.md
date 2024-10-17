@@ -27,7 +27,7 @@ There is also a variant of this app which uses Android's ORM "Room", see
 
 <br>
 
-![Screenshot 1](screenshot_1.png)  ![Screenshot 2](screenshot_2.png)
+![Screenshot 1](screenshot_1.png) &nbsp; ![Screenshot 2](screenshot_2.png)
 
 <br>
 
