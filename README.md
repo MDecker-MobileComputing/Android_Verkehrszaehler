@@ -2,11 +2,8 @@
 
 <br>
 
-Simple Android app for manually counting the traffic on a road to demonstrate how to use an
-.
-
-Diese Repo enthält ein "Android Studio"-Projekt für eine einfache native Android-App (Java) zum 
-manuellen Zählen des Verkehrs auf einer Straße, um die Verwendung einer
+Diese Repo enthält ein "Android Studio"-Projekt für eine einfache native Android-App (Java) 
+zum manuellen Zählen des Verkehrs auf einer Straße, um die Verwendung einer
 [SQLite-Datenbank](https://developer.android.com/training/data-storage/sqlite) 
 zu demonstrieren.
 
