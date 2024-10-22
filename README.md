@@ -12,8 +12,8 @@ zu demonstrieren.
 
 <br>
 
-There is also a variant of this app which uses Android's ORM "Room", see 
-[this repository](https://github.com/MDecker-MobileComputing/Android_Verkehrszaehler_mitRoom).
+Es gibt auch eine Variante dieser App mit dem Android-spezifischen ORM "Room", 
+[diese Repo](https://github.com/MDecker-MobileComputing/Android_Verkehrszaehler_mitRoom).
 
 <br>
 
