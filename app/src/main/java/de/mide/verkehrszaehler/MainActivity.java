@@ -1,6 +1,7 @@
 package de.mide.verkehrszaehler;
 
-import android.app.Activity;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.SQLException;
@@ -21,8 +22,8 @@ import java.util.HashMap;
  *
  * This project is licensed under the terms of the BSD 3-Clause License.
  */
-public class MainActivity extends Activity
-        implements DialogInterface.OnClickListener {
+public class MainActivity extends AppCompatActivity
+                          implements DialogInterface.OnClickListener {
 
     /** Tag für das Schreiben von Log-Nachrichten. */
     private static final String TAG4LOGGING = "Verkehrszaehler";
@@ -60,6 +61,8 @@ public class MainActivity extends Activity
         _buttonKfzMitfahrer = findViewById( R.id.buttonKfzMitfahrer );
         _buttonLkw          = findViewById( R.id.buttonLkw          );
 
+        actionBarKonfigurieren();
+
         try {
 
             _datenbankManager = new DatenbankManager(this);
@@ -77,6 +80,23 @@ public class MainActivity extends Activity
 
             zeigeDialog("Fehler", fehlernachricht);
         }
+    }
+
+
+    /**
+     * Titel der ActionBar setzen.
+     */
+    private void actionBarKonfigurieren() {
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar == null) {
+
+            Toast.makeText(this, "Keine ActionBar vorhanden.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        actionBar.setTitle( R.string.app_name );
+        //actionBar.setSubtitle(R.string.app_untertitel);
     }
 
 
