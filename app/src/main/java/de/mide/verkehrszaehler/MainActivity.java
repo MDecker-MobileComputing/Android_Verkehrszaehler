@@ -23,7 +23,7 @@ import java.util.HashMap;
  * This project is licensed under the terms of the BSD 3-Clause License.
  */
 public class MainActivity extends AppCompatActivity
-                          implements DialogInterface.OnClickListener {
+        implements DialogInterface.OnClickListener {
 
     /** Tag für das Schreiben von Log-Nachrichten. */
     private static final String TAG4LOGGING = "Verkehrszaehler";

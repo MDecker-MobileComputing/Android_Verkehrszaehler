@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Verkehrszähler"
+rootProject.name = "Verkehrszähler-App"
 include ':app'
